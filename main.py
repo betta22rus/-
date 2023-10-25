@@ -70,7 +70,7 @@ class Main(tk.Frame):   # отвечает за главное окно, хра�
             update_window.open ()
             update_window.default_data (selected_item)
         except IndexError:
-            # Show an error pop-up when no item is selected
+            # # Показывать всплывающее окно с ошибкой, если ни один элемент не выбран
             self.show_error_popup ("Выберите контакт для редактирования")
 
     def show_error_popup(self, message):
@@ -88,13 +88,35 @@ class Main(tk.Frame):   # отвечает за главное окно, хра�
         self.db.conn.commit()
         self.view_records()
 
+    # def delete_records(self):
+    #     for selection_item in self.tree.selection ():
+    #         item = self.tree.item (selection_item)
+    #         item_id = item['values'][0]  # The ID is the first value in the row
+    #         self.db.cursor.execute ('DELETE FROM db WHERE id=?', (item_id,))
+    #     self.db.conn.commit ()
+    #     self.view_records ()
+
     def delete_records(self):
-        for selection_item in self.tree.selection ():
+        selected_item = self.tree.selection ()
+        if not selected_item:
+            # Если строка не выбрана, отобразите сообщение и верните
+            self.show_message ("Не выбрана строка. Пожалуйста, выберите строку перед удалением.")
+            return
+
+        for selection_item in selected_item:
             item = self.tree.item (selection_item)
-            item_id = item['values'][0]  # The ID is the first value in the row
+            item_id = item['values'][0]  # Идентификатор - это первое значение в строке
             self.db.cursor.execute ('DELETE FROM db WHERE id=?', (item_id,))
         self.db.conn.commit ()
         self.view_records ()
+
+    def show_message(self, message):
+        message_window = tk.Toplevel (self)
+        message_window.title ("Message")
+        message_label = tk.Label (message_window, text=message)
+        message_label.pack ()
+        close_button = tk.Button (message_window, text="OK", command=message_window.destroy)
+        close_button.pack ()
 
     def open_search_dialog(self):
         Search(self)
