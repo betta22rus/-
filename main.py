@@ -64,9 +64,25 @@ class Main(tk.Frame):   # отвечает за главное окно, хра�
     # def open_update_dialog(self):
     #     UpDate (self)
     def open_update_dialog(self):
-        update_window = UpDate (self)
-        update_window.open ()
+        try:
+            selected_item = self.tree.selection ()[0]
+            update_window = UpDate (self)
+            update_window.open ()
+            update_window.default_data (selected_item)
+        except IndexError:
+            # Show an error pop-up when no item is selected
+            self.show_error_popup ("Выберите контакт для редактирования")
 
+    def show_error_popup(self, message):
+        error_popup = tk.Toplevel ()
+        error_popup.title ("Error")
+        error_popup.geometry ("300x100")
+        label = tk.Label (error_popup, text=message, wraplength=250)
+        label.pack (padx=20, pady=20)
+        ok_button = tk.Button (error_popup, text="OK", command=error_popup.destroy)
+        ok_button.pack (pady=10)
+        error_popup.focus_set ()
+        error_popup.grab_set ()
     def update_records(self, name,tel,email,zp):
         self.db.cursor.execute('''UPDATE db SET name=?, tel=?, email=?, zp=? WHERE id=?''', (name,tel,email,zp, self.tree.set(self.tree.selection()[0],'#1'))) #берем 1 выдел строку и берем значение 1 столбца и изменяем данные
         self.db.conn.commit()
