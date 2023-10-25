@@ -32,7 +32,7 @@ class Main(tk.Frame):   # отвечает за главное окно, хра�
 
         self.tree.pack(side=tk.LEFT)
 
-        button_update_dialog = tk.Button (toolbar, text='Редактировать(сначала выбрать)', bd=0, command=self.open_update_dialog)  # кнопка update
+        button_update_dialog = tk.Button (toolbar, text='Редактировать', bd=0, command=self.open_update_dialog)  # кнопка update
         button_update_dialog.pack (side=tk.LEFT)
 
         button_delete= tk.Button(toolbar, text='Удалить', bd=0, command=self.delete_records)
